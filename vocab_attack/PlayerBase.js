@@ -19,11 +19,11 @@ class PlayerBase {
 	update() {
 		// draw the base
 
-		// draw weapons and kill them if they don't have hp
+		// update weapons and remove them from the list if they died
 		for (let i=this.weapons.length-1;i>=0;i--) {
-			this.weapons[i].update();
-			if (this.weapons[i].currentHP <= 0) {
-				this.weapons[i].collider.isAlive = false;
+			if (this.weapons[i].isAlive) {
+				this.weapons[i].update();
+			} else {
 				this.weapons.splice(i,1);
 			}
 		}
@@ -46,7 +46,7 @@ class PlayerBase {
 	}
 
 	fire(target) {
-		if (this.currentHP > 0) { // if the planet is still alive
+		if (this.isAlive) { // if the planet is still alive
 			let weapon = this.weapons.concat().sort((a,b) => (Math.abs(a.position.x-target.position.x)-Math.abs(b.position.x-target.position.x)))[0];
 			weapon.fire(target);
 		}
@@ -63,6 +63,7 @@ class Weapon {
 		this.currentHP = 10;
 		this.collider = COLLIDERS.newCollider(this, this.position, 25, 4,15); // layer : 0100 / mask : 1111
 		this.shield = new Shield(x,y,100);
+		this.isAlive = true;
 
 		this.missiles = [];
 	}
@@ -83,10 +84,21 @@ class Weapon {
 		fill(255,200,200,255);
 		stroke(0);
 		rect(this.position.x-10,this.position.y-20,20,50)
+		// draw the weapon's hp bar
+		fill(255,0,0,255);
+		rect(this.position.x-10,this.position.y-20,20,5)
+		// weapon's current hp
+		fill(0,255,0,255);
+		rect(this.position.x-10,this.position.y-20, map(this.currentHP, 0, 10, 0, 20),5)
 
 		// update the shield
 		if (this.shield.isAlive){
 			this.shield.update();
+		}
+
+		// check hp
+		if (this.currentHP <= 0) {
+			this.isAlive = false;
 		}
 
 	}
@@ -98,6 +110,7 @@ class Weapon {
 
 	takeDamage(damage) {
 		this.currentHP -= damage;
+		if (this.currentHP<0) {this.currentHP = 0;}
 	}
 
 }
@@ -203,8 +216,8 @@ class Shield {
 	}
 
 	update() {
-		fill(0,0,100,this.currentHP*0.01*100);
-		stroke(0,0,100);
+		fill(0,0,100,this.currentHP);
+		stroke(0,0,100,100);
 		circle(this.position.x,this.position.y,this.size);
 		if (this.currentHP <= 0) {
 			this.collider.isAlive = false;
