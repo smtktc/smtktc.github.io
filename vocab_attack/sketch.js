@@ -1,5 +1,5 @@
 
-var size = 5;
+var numOfMeteors = 10;
 var meteors = Array();
 var player;
 
@@ -10,7 +10,8 @@ var guessTime = 1000; // in milliseconds
 var lastTime = 0; // millisecond time of last key press
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(1200, 600);
+  //createCanvas(windowWidth, windowHeight);
   frameRate(30);
   background(100);
   angleMode(DEGREES)
@@ -18,13 +19,12 @@ function setup() {
   player = new PlayerBase();
   player.update();
 
-  for (var i=0;i<size;i++) {
+  for (var i=0;i<numOfMeteors;i++) {
       let randomWord = wordList[Math.floor(Math.random()*wordList.length)];
-      let pos = [Math.random()*400 + 100 , -Math.random()*500]
+      let pos = [Math.random()*(width-100) + 100 , -Math.random()*500]
       meteors[i] = new Meteor(pos[0],pos[1],randomWord)
   }
 }
-
 
 function draw() {
   background(100);
@@ -59,7 +59,7 @@ function draw() {
       meteors.splice(i,1);
 
       randomWord = wordList[Math.floor(Math.random()*wordList.length)];
-      pos = [Math.random()*400 + 100 , -Math.random()*500]
+      pos = [Math.random()*(width-100) + 100 , -Math.random()*500];
       meteors.push(new Meteor(pos[0],pos[1],randomWord));
 
     }
@@ -81,14 +81,19 @@ function draw() {
   
 
 function keyTyped() {
-  currentGuess += key;
-  lastTime = millis();
+  if (key == "Enter") {lastTime=0;}
+  else {
+    currentGuess += key;
+    lastTime = millis();
+  }
+
 
 }
 
 function keyPressed() {
   if (key === 'Backspace') {
-    currentGuess = '';
-    lastTime = 0;   
+    currentGuess = currentGuess.substring(0,currentGuess.length-1)
+    //lastTime = 0;
+    lastTime = millis();
   }
 }

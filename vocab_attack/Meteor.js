@@ -3,7 +3,7 @@ class Meteor {
 		this.word = word[0];
 		this.answer = word[1]; // correct answer for the word
 		this.guess = ''; // current guess
-		this.damage = 5;
+		this.damage = this.answer.length;
 
 		this.position = createVector(x,y);
 		this.speed = createVector();
@@ -14,7 +14,7 @@ class Meteor {
 		this.speed.mult(2*Math.exp(-0.2*this.answer.length));
 
 		this.size = this.answer.length * 5; // size of the meteor
-		this.collider = COLLIDERS.newCollider(this, this.position, this.size, 1,14); // layer : 0001 / mask : 0110
+		this.collider = COLLIDERS.newCollider(this, this.position, this.size, 1,6); // layer : 0001 / mask : 0110
 
 		this.color = lerpColor(color(100, 50, 0,200), color(0, 50, 100,200), Math.random());
 		
@@ -27,6 +27,7 @@ class Meteor {
 
 		// draw the meteor
 		fill(this.color,100);
+		stroke(0);
 		circle(this.position.x,this.position.y,this.size);
 
 		fill(255);

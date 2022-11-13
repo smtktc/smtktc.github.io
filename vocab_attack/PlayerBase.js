@@ -6,7 +6,7 @@ class PlayerBase {
 
 		this.collider = COLLIDERS.newCollider(this, this.position, width * 4, 4,15); // layer : 0100 / mask : 1111
 
-		this.shield = new Shield(this.position.x,this.position.y,width * 4.5)
+		this.shield = new Shield(this.position.x,this.position.y,width * 4.2)
 
 		this.weapons = [];
 		this.weapons[0] = new Weapon(this.position.x+2*width*sin(5)		,this.position.y-2*width*cos(5));
@@ -18,11 +18,6 @@ class PlayerBase {
 
 	update() {
 		// draw the base
-
-		// draw the shield
-		if (this.shield.isAlive){
-			this.shield.update();
-		}
 
 		// draw weapons and kill them if they don't have hp
 		for (let i=this.weapons.length-1;i>=0;i--) {
@@ -37,6 +32,11 @@ class PlayerBase {
 		fill(200);
 		stroke(0);
 		circle(this.position.x,this.position.y, width * 4);
+
+		// draw the shield
+		if (this.shield.isAlive){
+			this.shield.update();
+		}
 
 		// check hp
 		if (this.currentHP <= 0) {
@@ -70,15 +70,6 @@ class Weapon {
 	update() {
 		// draw the weapon
 
-		if (this.shield.isAlive){
-			this.shield.update();
-		}
-
-		fill(255,200,200,255);
-		stroke(0);
-		rect(this.position.x-10,this.position.y-20,20,50)
-
-
 		// update missiles
 		for (let i=this.missiles.length-1;i>=0;i--) {
 			if (this.missiles[i].isAlive){
@@ -87,6 +78,17 @@ class Weapon {
 				this.missiles.splice(i,1);
 			}
 		}
+
+		// draw the weapon
+		fill(255,200,200,255);
+		stroke(0);
+		rect(this.position.x-10,this.position.y-20,20,50)
+
+		// update the shield
+		if (this.shield.isAlive){
+			this.shield.update();
+		}
+
 	}
 
 	fire(target) {
@@ -104,11 +106,11 @@ class Missile {
   constructor(weapon, target) {
     this.position = createVector(weapon.position.x, weapon.position.y);
     this.target = target;
-    this.vel = createVector(0,-10);
+    this.vel = createVector(0,-5);
     this.acc = createVector();
     this.r = 8;
-    this.maxspeed = 10;
-    this.maxforce = 5;
+    this.maxspeed = 5;
+    this.maxforce = 1;
 
     this.angle = 90;
 
