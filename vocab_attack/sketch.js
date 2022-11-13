@@ -59,7 +59,7 @@ function draw() {
       meteors.splice(i,1);
 
       randomWord = wordList[Math.floor(Math.random()*wordList.length)];
-      pos = [Math.random()*400 + 100 , 0]
+      pos = [Math.random()*400 + 100 , -Math.random()*500]
       meteors.push(new Meteor(pos[0],pos[1],randomWord));
 
     }
